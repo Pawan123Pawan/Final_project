@@ -1,0 +1,90 @@
+<---------Implement of promoRouter------------>
+
+const express=require('express')
+const bodyParser = require('body-parser');
+const app= express();
+
+const promoRouter = require('./express');
+
+app.use('/promotions', promoRouter);
+
+app.use(bodyParser.json());
+
+app.all('/promotions', (req,res,next) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  next();
+});
+
+app.get('/promotions', (req,res,next) => {
+    res.end('Will send all the promotions to you!');
+});
+
+app.post('/promotions', (req, res, next) => {
+ res.end('Will add the promotions: ' + req.body.name + ' with details: ' + req.body.description);
+});
+
+app.put('/promotions', (req, res, next) => {
+  res.statusCode = 403;
+  res.end('PUT operation not supported on /promotions');
+});
+ 
+app.delete('/promotions', (req, res, next) => {
+    res.end('Deleting all promotions');
+});
+
+app.get('/promotions/:promoID', (req,res,next) => {
+    res.end('Will send details of the promotions: ' + req.params.promoID +' to you!');
+});
+
+app.post('/promotions/:promoID', (req, res, next) => {
+  res.statusCode = 403;
+  res.end('POST operation not supported on /promotions/'+ req.params.promoID);
+});
+
+app.put('/promotions/:promoID', (req, res, next) => {
+  res.write('Updating the promotions: ' + req.params.promoID + '\n');
+  res.end('Will update the promotions: ' + req.body.name + 
+        ' with details: ' + req.body.description);
+});
+
+app.delete('/promotions/:promoID', (req, res, next) => {
+    res.end('Deleting promotions: ' + req.params.promoID);
+});
+app.listen(4000,()=>{
+    console.log(`server running at 4000..........`)
+})
+
+
+<-----------add promoRouter------------>
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const promoRouter = express.Router();
+
+promoRouter.use(bodyParser.json());
+
+promoRouter.route('/')
+.all((req,res,next) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    next();
+})
+.get((req,res,next) => {
+    res.end('Will send all the promotions to you!');
+})
+.post((req, res, next) => {
+    res.end('Will add the promotions: ' + req.body.name + ' with details: ' + req.body.description);
+})
+.put((req, res, next) => {
+    res.statusCode = 403;
+    res.end('PUT operation not supported on /promotions');
+})
+.delete((req, res, next) => {
+    res.end('Deleting all promotions');
+});
+
+module.exports = promoRouter;
+
+
+
